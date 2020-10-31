@@ -9,6 +9,8 @@ set(CUDA_HEAD "/opt/cuda/targets/x86_64-linux/include" "Galobal variable")
 
 set(TENSORRT_LIB_PATH "/usr/local/${TensorRT_VERSION}/lib")
 set(CUDA_LIB_PATH "/opt/cuda/targets/x86_64-linux/lib")
+# CUDA配置
+find_package(CUDA 11.0 REQUIRED)
 # 包含TensorRT头文件
 include_directories(${TENSORRT_HEAD})
 # 包含cuda头文件
@@ -23,10 +25,6 @@ include_directories(${CMAKE_SOURCE_DIR}/common/include)
 file(GLOB TRT_LIBRARIES "${TENSORRT_LIB_PATH}/*.so")
 file(GLOB CUDA_LIBRARIES "${CUDA_LIB_PATH}/*.so")
 
-#set(TRT_LIBS TRT_LIBRARIES "Galobal variable")
-#set(CUDA_LIBS CUDA_LIBRARIES "Galobal variable")
-# CUDA配置
-find_package(CUDA 11.0 REQUIRED)
 add_subdirectory(utils)
 add_subdirectory(common)
 add_subdirectory(demo)

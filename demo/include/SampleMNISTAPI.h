@@ -23,52 +23,30 @@ public:
             : mParams(params), mEngine(nullptr) {
     }
 
-    //!
-    //! \brief Function builds the network engine
-    //!
-    bool build();
 
-    //!
-    //! \brief Runs the TensorRT inference engine for this sample
-    //!
-    bool infer();
-
-    //!
-    //! \brief Cleans up any state created in the sample class
-    //!
-    bool teardown();
+    bool build();//构建推理网络
+    bool infer();//运行TensorRT推理引擎
+    bool teardown();//清除引擎相关信息
 
 private:
-    SampleMNISTAPIParams mParams; //!< The parameters for the sample.
+    SampleMNISTAPIParams mParams; // 推理需要的参数结构体
+    int mNumber{0}; //分类的类别
+    std::map<std::string, nvinfer1::Weights> mWeightMap; //权重名称 -> 权重值
+    std::shared_ptr<nvinfer1::ICudaEngine> mEngine; //网络执行的引擎
 
-    int mNumber{0}; //!< The number to classify
-
-    std::map<std::string, nvinfer1::Weights> mWeightMap; //!< The weight name to weight value map
-
-    std::shared_ptr<nvinfer1::ICudaEngine> mEngine; //!< The TensorRT engine used to run the network
-
-    //!
-    //! \brief Uses the API to create the MNIST Network
-    //!
+    // 创建MNIST网络
     bool constructNetwork(SampleUniquePtr<nvinfer1::IBuilder> &builder,
                           SampleUniquePtr<nvinfer1::INetworkDefinition> &network,
                           SampleUniquePtr<nvinfer1::IBuilderConfig> &config);
 
-    //!
-    //! \brief Reads the input  and stores the result in a managed buffer
-    //!
+    // 处理网络的输入，管理存储数据
     bool processInput(const samplesCommon::BufferManager &buffers);
 
-    //!
-    //! \brief Classifies digits and verify result
-    //!
+    // 分类数字检查输出
     bool verifyOutput(const samplesCommon::BufferManager &buffers);
 
-    //!
-    //! \brief Loads weights from weights file
-    //!
+    // 从文件中载入权重文件
     std::map<std::string, nvinfer1::Weights> loadWeights(const std::string &file);
 };
-
 
 #endif //INFERENCE_SAMPLEMNISTAPI_H

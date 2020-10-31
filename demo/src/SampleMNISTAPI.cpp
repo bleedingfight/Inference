@@ -1,4 +1,4 @@
-#include "../../demo/include/SampleMNISTAPI.h"
+#include "SampleMNISTAPI.h"
 
 //!
 //! \brief Creates the network, configures the builder and creates the network engine
@@ -298,6 +298,5 @@ std::map<std::string, nvinfer1::Weights> SampleMNISTAPI::loadWeights(const std::
         wt.count = size;
         weightMap[name] = wt;
     }
-
     return weightMap;
 }
