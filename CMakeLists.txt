@@ -17,6 +17,7 @@ include_directories(${CUDA_HEAD})
 # 包含依赖头文件
 include_directories(${CMAKE_SOURCE_DIR}/utils/include)
 include_directories(${CMAKE_SOURCE_DIR}/include)
+include_directories(${CMAKE_SOURCE_DIR}/common/include)
 
 # 查找TensorRT库文件
 file(GLOB TRT_LIBRARIES "${TENSORRT_LIB_PATH}/*.so")
@@ -27,5 +28,6 @@ file(GLOB CUDA_LIBRARIES "${CUDA_LIB_PATH}/*.so")
 # CUDA配置
 find_package(CUDA 11.0 REQUIRED)
 add_subdirectory(utils)
+add_subdirectory(common)
 add_executable(${PROJECT_NAME} main.cpp)
-target_link_libraries(${PROJECT_NAME} logger mnistapi)
+target_link_libraries(${PROJECT_NAME} logger mnistapi common)
