@@ -1,4 +1,4 @@
-#include "SampleMNISTAPI.h"
+#include "MNIST_NETWORK.h"
 
 //!
 //! \brief Creates the network, configures the builder and creates the network engine
@@ -8,7 +8,7 @@
 //!
 //! \return Returns true if the engine was created successfully and false otherwise
 //!
-bool SampleMNISTAPI::build() {
+bool MNIST_NETWORK::build() {
     mWeightMap = loadWeights(locateFile(mParams.weightsFile, mParams.dataDirs));
 
     auto builder = SampleUniquePtr<nvinfer1::IBuilder>(nvinfer1::createInferBuilder(sample::gLogger.getTRTLogger()));
@@ -31,13 +31,13 @@ bool SampleMNISTAPI::build() {
         return false;
     }
 
-    assert(network->getNbInputs() == 1);
+    assert(network->getNbInputs() == 1);//确保mnist的输入只有一个
     auto inputDims = network->getInput(0)->getDimensions();
-    assert(inputDims.nbDims == 3);
+    assert(inputDims.nbDims == 3);//确保输入数据的维度为3（28,28,1）
 
-    assert(network->getNbOutputs() == 1);
+    assert(network->getNbOutputs() == 1);//网络输出只有一个
     auto outputDims = network->getOutput(0)->getDimensions();
-    assert(outputDims.nbDims == 3);
+    assert(outputDims.nbDims == 3);// 输出数据的维度为3
 
     return true;
 }
@@ -49,7 +49,7 @@ bool SampleMNISTAPI::build() {
 //!
 //! \param builder Pointer to the engine builder
 //!
-bool SampleMNISTAPI::constructNetwork(SampleUniquePtr<nvinfer1::IBuilder> &builder,
+bool MNIST_NETWORK::constructNetwork(SampleUniquePtr<nvinfer1::IBuilder> &builder,
                                       SampleUniquePtr<nvinfer1::INetworkDefinition> &network,
                                       SampleUniquePtr<nvinfer1::IBuilderConfig> &config) {
     // Create input tensor of shape { 1, 1, 28, 28 }
@@ -62,6 +62,7 @@ bool SampleMNISTAPI::constructNetwork(SampleUniquePtr<nvinfer1::IBuilder> &build
     const Weights power{DataType::kFLOAT, nullptr, 0};
     const Weights shift{DataType::kFLOAT, nullptr, 0};
     const Weights scale{DataType::kFLOAT, &scaleParam, 1};
+
     IScaleLayer *scale_1 = network->addScale(*data, ScaleMode::kUNIFORM, shift, scale, power);
     assert(scale_1);
 
@@ -135,7 +136,7 @@ bool SampleMNISTAPI::constructNetwork(SampleUniquePtr<nvinfer1::IBuilder> &build
 //! \details This function is the main execution function of the sample. It allocates the buffer,
 //!          sets inputs and executes the engine.
 //!
-bool SampleMNISTAPI::infer() {
+bool MNIST_NETWORK::infer() {
     // Create RAII buffer manager object
     samplesCommon::BufferManager buffers(mEngine, mParams.batchSize);
 
@@ -172,7 +173,7 @@ bool SampleMNISTAPI::infer() {
 //!
 //! \brief Reads the input and stores the result in a managed buffer
 //!
-bool SampleMNISTAPI::processInput(const samplesCommon::BufferManager &buffers) {
+bool MNIST_NETWORK::processInput(const samplesCommon::BufferManager &buffers) {
     // Read a random digit file
     srand(unsigned(time(nullptr)));
     std::vector<uint8_t> fileData(mParams.inputH * mParams.inputW);
@@ -217,7 +218,7 @@ bool SampleMNISTAPI::processInput(const samplesCommon::BufferManager &buffers) {
 //!
 //! \return whether the classification output matches expectations
 //!
-bool SampleMNISTAPI::verifyOutput(const samplesCommon::BufferManager &buffers) {
+bool MNIST_NETWORK::verifyOutput(const samplesCommon::BufferManager &buffers) {
     float *prob = static_cast<float *>(buffers.getHostBuffer(mParams.outputTensorNames[0]));
     std::cout << "\nOutput:\n" << std::endl;
     float maxVal{0.0f};
@@ -237,7 +238,7 @@ bool SampleMNISTAPI::verifyOutput(const samplesCommon::BufferManager &buffers) {
 //!
 //! \brief Cleans up any state created in the sample class
 //!
-bool SampleMNISTAPI::teardown() {
+bool MNIST_NETWORK::teardown() {
     // Release weights host memory
     for (auto &mem : mWeightMap) {
         auto weight = mem.second;
@@ -257,7 +258,7 @@ bool SampleMNISTAPI::teardown() {
 //! \details TensorRT weight files have a simple space delimited format
 //!          [type] [size] <data x size in hex>
 //!
-std::map<std::string, nvinfer1::Weights> SampleMNISTAPI::loadWeights(const std::string &file) {
+std::map<std::string, nvinfer1::Weights> MNIST_NETWORK::loadWeights(const std::string &file) {
     sample::gLogInfo << "Loading weights: " << file << std::endl;
 
     // Open weights file

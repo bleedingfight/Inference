@@ -2,8 +2,8 @@
 // Created by liushuai on 2020/10/31.
 //
 
-#ifndef INFERENCE_SAMPLEMNISTAPI_H
-#define INFERENCE_SAMPLEMNISTAPI_H
+#ifndef INFERENCE_MNIST_NETWORK_H
+#define INFERENCE_MNIST_NETWORK_H
 
 #include "argsParser.h"
 #include "buffers.h"
@@ -14,12 +14,12 @@
 #include "NvInfer.h"
 #include "SampleMNISTAPIParams.h"
 
-class SampleMNISTAPI {
+class MNIST_NETWORK {
     template<typename T>
     using SampleUniquePtr = std::unique_ptr<T, samplesCommon::InferDeleter>;
 
 public:
-    SampleMNISTAPI(const SampleMNISTAPIParams &params)
+    MNIST_NETWORK(const SampleMNISTAPIParams &params)
             : mParams(params), mEngine(nullptr) {
     }
 
@@ -49,4 +49,4 @@ private:
     std::map<std::string, nvinfer1::Weights> loadWeights(const std::string &file);
 };
 
-#endif //INFERENCE_SAMPLEMNISTAPI_H
+#endif //INFERENCE_MNIST_NETWORK_H

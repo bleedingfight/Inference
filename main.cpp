@@ -2,11 +2,11 @@
 #include "logger.h"
 #include <cstdlib>
 #include <iostream>
-#include "demo/include/SampleMNISTAPI.h"
+#include "MNIST_NETWORK.h"
 #include "printHelpInfo.h"
 #include "initializeMnistSampleParams.h"
 
-const std::string gSampleName = "TensorRT.sample_mnist_api";
+const std::string gSampleName = "TensorRT.MNIST_Caffe";
 
 int main(int argc, char **argv) {
     samplesCommon::Args args;
@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
 
     sample::gLogger.reportTestStart(sampleTest);
 
-    SampleMNISTAPI sample(initializeMnistSampleParams(args));
+    MNIST_NETWORK sample(initializeMnistSampleParams(args));
 
     sample::gLogInfo << "Building and running a GPU inference engine for MNIST API" << std::endl;
 

@@ -20,6 +20,7 @@ include_directories(${CUDA_HEAD})
 include_directories(${CMAKE_SOURCE_DIR}/utils/include)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(${CMAKE_SOURCE_DIR}/common/include)
+include_directories(${CMAKE_SOURCE_DIR}/demo/include)
 
 # 查找TensorRT库文件
 file(GLOB TRT_LIBRARIES "${TENSORRT_LIB_PATH}/*.so")
