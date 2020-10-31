@@ -12,7 +12,7 @@
 
 #include "NvCaffeParser.h"
 #include "NvInfer.h"
-#include "SampleMNISTAPIParams.h"
+#include "MNIST_NETWORK_Params.h"
 
 class MNIST_NETWORK {
     template<typename T>

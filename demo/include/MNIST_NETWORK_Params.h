@@ -2,8 +2,8 @@
 // Created by liushuai on 2020/10/31.
 //
 
-#ifndef INFERENCE_SAMPLEMNISTAPIPARAMS_H
-#define INFERENCE_SAMPLEMNISTAPIPARAMS_H
+#ifndef INFERENCE_MNIST_NETWORK_PARAMS_H
+#define INFERENCE_MNIST_NETWORK_PARAMS_H
 #include "argsParser.h"
 
 struct MNIST_NETWORK_Params : public samplesCommon::SampleParams
@@ -14,4 +14,4 @@ struct MNIST_NETWORK_Params : public samplesCommon::SampleParams
     std::string weightsFile;     //!< The filename of the weights file
     std::string mnistMeansProto; //!< The proto file containing means
 };
-#endif //INFERENCE_SAMPLEMNISTAPIPARAMS_H
+#endif //INFERENCE_MNIST_NETWORK_PARAMS_H

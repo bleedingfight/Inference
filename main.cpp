@@ -4,7 +4,7 @@
 #include <iostream>
 #include "MNIST_NETWORK.h"
 #include "printHelpInfo.h"
-#include "initializeMnistSampleParams.h"
+#include "initializeMnistNetworkParams.h"
 
 const std::string gSampleName = "TensorRT.MNIST_Caffe";
 

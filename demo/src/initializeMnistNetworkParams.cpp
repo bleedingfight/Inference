@@ -2,7 +2,7 @@
 // Created by liushuai on 2020/10/31.
 //
 
-#include "initializeMnistSampleParams.h"
+#include "initializeMnistNetworkParams.h"
 MNIST_NETWORK_Params initializeMnistSampleParams(const samplesCommon::Args& args)
 {
     MNIST_NETWORK_Params params;
