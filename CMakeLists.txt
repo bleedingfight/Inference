@@ -9,6 +9,7 @@ set(CUDA_HEAD "/opt/cuda/targets/x86_64-linux/include" "Galobal variable")
 
 set(TENSORRT_LIB_PATH "/usr/local/${TensorRT_VERSION}/lib")
 set(CUDA_LIB_PATH "/opt/cuda/targets/x86_64-linux/lib")
+set(DEMO_LIBS demo_lib "Global variable")
 # CUDA配置
 find_package(CUDA 11.0 REQUIRED)
 # 包含TensorRT头文件
@@ -29,5 +30,6 @@ file(GLOB CUDA_LIBRARIES "${CUDA_LIB_PATH}/*.so")
 add_subdirectory(utils)
 add_subdirectory(common)
 add_subdirectory(demo)
-add_executable(${PROJECT_NAME} main.cpp)
-target_link_libraries(${PROJECT_NAME} logger mnistapi common)
+add_executable(${PROJECT_NAME} uff_mnist.cpp)
+
+target_link_libraries(${PROJECT_NAME} logger demo_lib common)
