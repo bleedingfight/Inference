@@ -1,4 +1,4 @@
-#include "SampleMNISTAPI.h"
+#include "../../demo/include/SampleMNISTAPI.h"
 
 //!
 //! \brief Creates the network, configures the builder and creates the network engine

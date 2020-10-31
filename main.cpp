@@ -2,7 +2,7 @@
 #include "logger.h"
 #include <cstdlib>
 #include <iostream>
-#include "SampleMNISTAPI.h"
+#include "demo/include/SampleMNISTAPI.h"
 #include "printHelpInfo.h"
 #include "initializeMnistSampleParams.h"
 
@@ -10,6 +10,7 @@ const std::string gSampleName = "TensorRT.sample_mnist_api";
 
 int main(int argc, char **argv) {
     samplesCommon::Args args;
+    //解析mnist参数
     bool argsOK = samplesCommon::parseArgs(args, argc, argv);
     if (!argsOK) {
         sample::gLogError << "Invalid arguments" << std::endl;
