@@ -19,7 +19,7 @@ class MNIST_NETWORK {
     using SampleUniquePtr = std::unique_ptr<T, samplesCommon::InferDeleter>;
 
 public:
-    MNIST_NETWORK(const SampleMNISTAPIParams &params)
+    MNIST_NETWORK(const MNIST_NETWORK_Params &params)
             : mParams(params), mEngine(nullptr) {
     }
 
@@ -29,7 +29,7 @@ public:
     bool teardown();//清除引擎相关信息
 
 private:
-    SampleMNISTAPIParams mParams; // 推理需要的参数结构体
+    MNIST_NETWORK_Params mParams; // 推理需要的参数结构体
     int mNumber{0}; //分类的类别
     std::map<std::string, nvinfer1::Weights> mWeightMap; //权重名称 -> 权重值
     std::shared_ptr<nvinfer1::ICudaEngine> mEngine; //网络执行的引擎

@@ -6,5 +6,5 @@
 #define INFERENCE_INITIALIZEMNISTSAMPLEPARAMS_H
 #include "argsParser.h"
 #include "SampleMNISTAPIParams.h"
-SampleMNISTAPIParams initializeMnistSampleParams(const samplesCommon::Args& args);
+MNIST_NETWORK_Params initializeMnistSampleParams(const samplesCommon::Args& args);
 #endif //INFERENCE_INITIALIZEMNISTSAMPLEPARAMS_H

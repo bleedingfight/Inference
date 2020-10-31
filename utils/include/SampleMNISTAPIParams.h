@@ -6,7 +6,7 @@
 #define INFERENCE_SAMPLEMNISTAPIPARAMS_H
 #include "argsParser.h"
 
-struct SampleMNISTAPIParams : public samplesCommon::SampleParams
+struct MNIST_NETWORK_Params : public samplesCommon::SampleParams
 {
     int inputH;                  //!< The input height
     int inputW;                  //!< The input width

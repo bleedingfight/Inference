@@ -3,9 +3,9 @@
 //
 
 #include "initializeMnistSampleParams.h"
-SampleMNISTAPIParams initializeMnistSampleParams(const samplesCommon::Args& args)
+MNIST_NETWORK_Params initializeMnistSampleParams(const samplesCommon::Args& args)
 {
-    SampleMNISTAPIParams params;
+    MNIST_NETWORK_Params params;
     if (args.dataDirs.empty()) //!< Use default directories if user hasn't provided directory paths
     {
         params.dataDirs.push_back("/usr/local/TensorRT-7.2.0.14/data/mnist/");
