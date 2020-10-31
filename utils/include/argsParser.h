@@ -24,7 +24,6 @@
 #include <getopt.h>
 #endif
 #include <iostream>
-
 namespace samplesCommon
 {
 
