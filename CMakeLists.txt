@@ -30,6 +30,7 @@ file(GLOB CUDA_LIBRARIES "${CUDA_LIB_PATH}/*.so")
 add_subdirectory(utils)
 add_subdirectory(common)
 add_subdirectory(demo)
+add_subdirectory(plugin)
 add_executable(${PROJECT_NAME} uff_mnist.cpp)
 
 target_link_libraries(${PROJECT_NAME} logger demo_lib common)
