@@ -42,7 +42,7 @@
 /// Combined gcc version number.
 #define HALF_GNUC_VERSION (__GNUC__ * 100 + __GNUC_MINOR__)
 
-// check C++11 language features
+// check C++11 language tools
 #if defined(__clang__) // clang
 #if __has_feature(cxx_static_assert) && !defined(HALF_ENABLE_CPP11_STATIC_ASSERT)
 #define HALF_ENABLE_CPP11_STATIC_ASSERT 1
@@ -111,7 +111,7 @@
 #pragma warning(disable : 4099 4127 4146) // struct vs class, constant in if, negative unsigned
 #endif
 
-// check C++11 library features
+// check C++11 library tools
 #include <utility>
 #if defined(_LIBCPP_VERSION) // libc++
 #if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103

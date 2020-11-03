@@ -14,7 +14,6 @@ samplesCommon::UffSampleParams initializeUffParams(const samplesCommon::Args& ar
     {
         params.dataDirs = args.dataDirs;
     }
-
     params.uffFileName = locateFile("lenet5.uff", params.dataDirs);
     params.inputTensorNames.push_back("in");
     params.batchSize = 1;
