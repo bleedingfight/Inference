@@ -32,7 +32,7 @@
 
 using namespace samplesCommon;
 
-const std::string gSampleName = "TensorRT.sample_uff_fasterRCNN";
+const std::string gSampleName = "TensorRT.uff_fasterRCNN";
 
 int main(int argc, char** argv)
 {
@@ -56,20 +56,20 @@ int main(int argc, char** argv)
     sample::gLogger.reportTestStart(sampleTest);
     auto result = initializeUffRCNNParams(args);
     std::cout<<result.uffFileName<<std::endl;
-    UffFasterRcnn sample(initializeUffRCNNParams(args));
+    UffFasterRcnn uffFasterRcnn(initializeUffRCNNParams(args));
     sample::gLogInfo << "Building and running a GPU inference engine for FasterRCNN" << std::endl;
 
-    if (!sample.build())
+    if (!uffFasterRcnn.build())
     {
         return sample::gLogger.reportFail(sampleTest);
     }
 
-    if (!sample.infer())
+    if (!uffFasterRcnn.infer())
     {
         return sample::gLogger.reportFail(sampleTest);
     }
 
-    if (!sample.teardown())
+    if (!uffFasterRcnn.teardown())
     {
         return sample::gLogger.reportFail(sampleTest);
     }

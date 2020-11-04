@@ -1,0 +1,5 @@
+[submodule "tools/thirdparty/utils"]
+    path = inference-engine/thirdparty/ade
+    url = git@github.com:bleedingfight/utils.git
+    ignore = dirty
+

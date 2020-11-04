@@ -6,4 +6,5 @@
 #define INFERENCE_HELPINFO_H
 #include <iostream>
 void printHelpUffMnistInfo();
+void printUffSSDInfo();
 #endif //INFERENCE_HELPINFO_H

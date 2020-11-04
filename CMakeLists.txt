@@ -33,6 +33,6 @@ add_subdirectory(demo)
 add_subdirectory(plugin)
 add_subdirectory(tools)
 #add_executable(${PROJECT_NAME} uff_mnist.cpp)
-add_executable(${PROJECT_NAME} sampleUffFasterRCNN.cpp)
+add_executable(${PROJECT_NAME} UffSSD.cpp)
 
 target_link_libraries(${PROJECT_NAME} logger demo_lib common)
