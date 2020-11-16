@@ -206,6 +206,12 @@ bool UffSSD::constructNetwork(niquePtr<nvinfer1::IBuilder> &builder,
     if (!mEngine) {
         return false;
     }
+//    std::string engine_filename = "model.plan";
+//    auto engine_plan = samplesCommon::infer_object(mEngine->serialize());
+//    std::ofstream engine_file(engine_filename.c_str());
+//
+//    engine_file.write((char*)engine_plan->data(), engine_plan->size());
+//    engine_file.close();
 
     return true;
 }
