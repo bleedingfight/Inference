@@ -1,4 +1,6 @@
 __pycache__/
+*.plan
+*.cache
 build
 .idea
 # Compiled Object files

@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 2020, NVIDIA CORPORATION. All rights reserved.
+ * SPDX-FileCopyrightText: Copyright (c) 1993-2023 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,7 +20,6 @@
 #include "NvInfer.h"
 #include "common.h"
 #include <algorithm>
-#include <assert.h>
 #include <stdio.h>
 #include <vector>
 
@@ -43,7 +43,7 @@ public:
         const std::vector<std::string>& directories)
         : mBatchSize{batchSize}
         , mMaxBatches{maxBatches}
-        , mDims{3, 1, 28, 28} //!< We already know the dimensions of MNIST images.
+        , mDims{3, {1, 28, 28}} //!< We already know the dimensions of MNIST images.
     {
         readDataFile(locateFile(dataFile, directories));
         readLabelsFile(locateFile(labelsFile, directories));
@@ -91,7 +91,7 @@ public:
 
     nvinfer1::Dims getDims() const override
     {
-        return Dims{4, {mBatchSize, mDims.d[0], mDims.d[1], mDims.d[2]}, {}};
+        return nvinfer1::Dims{4, {mBatchSize, mDims.d[0], mDims.d[1], mDims.d[2]}};
     }
 
 private:
@@ -103,7 +103,7 @@ private:
         file.read(reinterpret_cast<char*>(&magicNumber), sizeof(magicNumber));
         // All values in the MNIST files are big endian.
         magicNumber = samplesCommon::swapEndianness(magicNumber);
-        assert(magicNumber == 2051 && "Magic Number does not match the expected value for an MNIST image set");
+        ASSERT(magicNumber == 2051 && "Magic Number does not match the expected value for an MNIST image set");
 
         // Read number of images and dimensions
         file.read(reinterpret_cast<char*>(&numImages), sizeof(numImages));
@@ -120,7 +120,7 @@ private:
         file.read(reinterpret_cast<char*>(rawData.data()), numElements * sizeof(uint8_t));
         mData.resize(numElements);
         std::transform(
-            rawData.begin(), rawData.end(), mData.begin(), [](uint8_t val) { return static_cast<float>(val) / 255.f; });
+            rawData.begin(), rawData.end(), mData.begin(), [](uint8_t val) { return static_cast<float>(val) / 255.F; });
     }
 
     void readLabelsFile(const std::string& labelsFilePath)
@@ -130,7 +130,7 @@ private:
         file.read(reinterpret_cast<char*>(&magicNumber), sizeof(magicNumber));
         // All values in the MNIST files are big endian.
         magicNumber = samplesCommon::swapEndianness(magicNumber);
-        assert(magicNumber == 2049 && "Magic Number does not match the expected value for an MNIST labels file");
+        ASSERT(magicNumber == 2049 && "Magic Number does not match the expected value for an MNIST labels file");
 
         file.read(reinterpret_cast<char*>(&numImages), sizeof(numImages));
         numImages = samplesCommon::swapEndianness(numImages);
@@ -145,7 +145,7 @@ private:
     int mBatchSize{0};
     int mBatchCount{0}; //!< The batch that will be read on the next invocation of next()
     int mMaxBatches{0};
-    Dims mDims{};
+    nvinfer1::Dims mDims{};
     std::vector<float> mData{};
     std::vector<float> mLabels{};
 };
@@ -153,42 +153,39 @@ private:
 class BatchStream : public IBatchStream
 {
 public:
-    BatchStream(
-        int batchSize, int maxBatches, std::string prefix, std::string suffix, std::vector<std::string> directories)
+    BatchStream(int batchSize, int maxBatches, std::string const& prefix, std::string const& suffix,
+        std::vector<std::string> const& directories)
         : mBatchSize(batchSize)
         , mMaxBatches(maxBatches)
         , mPrefix(prefix)
         , mSuffix(suffix)
         , mDataDir(directories)
     {
-        FILE* file = fopen(locateFile(mPrefix + std::string("0") + mSuffix, mDataDir).c_str(), "rb");
-        assert(file != nullptr);
+        std::ifstream file(locateFile(mPrefix + std::string("0") + mSuffix, mDataDir).c_str(), std::ios::binary);
+        ASSERT(file.good());
         int d[4];
-        size_t readSize = fread(d, sizeof(int), 4, file);
-        assert(readSize == 4);
+        file.read(reinterpret_cast<char*>(d), 4 * sizeof(int32_t));
         mDims.nbDims = 4;  // The number of dimensions.
         mDims.d[0] = d[0]; // Batch Size
         mDims.d[1] = d[1]; // Channels
         mDims.d[2] = d[2]; // Height
         mDims.d[3] = d[3]; // Width
-        assert(mDims.d[0] > 0 && mDims.d[1] > 0 && mDims.d[2] > 0 && mDims.d[3] > 0);
-        fclose(file);
+        ASSERT(mDims.d[0] > 0 && mDims.d[1] > 0 && mDims.d[2] > 0 && mDims.d[3] > 0);
 
         mImageSize = mDims.d[1] * mDims.d[2] * mDims.d[3];
         mBatch.resize(mBatchSize * mImageSize, 0);
         mLabels.resize(mBatchSize, 0);
         mFileBatch.resize(mDims.d[0] * mImageSize, 0);
         mFileLabels.resize(mDims.d[0], 0);
-        reset(0);
     }
 
-    BatchStream(int batchSize, int maxBatches, std::string prefix, std::vector<std::string> directories)
+    BatchStream(int batchSize, int maxBatches, std::string const& prefix, std::vector<std::string> const& directories)
         : BatchStream(batchSize, maxBatches, prefix, ".batch", directories)
     {
     }
 
-    BatchStream(
-        int batchSize, int maxBatches, nvinfer1::Dims dims, std::string listFile, std::vector<std::string> directories)
+    BatchStream(int batchSize, int maxBatches, nvinfer1::Dims const& dims, std::string const& listFile,
+        std::vector<std::string> const& directories)
         : mBatchSize(batchSize)
         , mMaxBatches(maxBatches)
         , mDims(dims)
@@ -200,7 +197,6 @@ public:
         mLabels.resize(mBatchSize, 0);
         mFileBatch.resize(mDims.d[0] * mImageSize, 0);
         mFileLabels.resize(mDims.d[0], 0);
-        reset(0);
     }
 
     // Resets data members
@@ -222,7 +218,7 @@ public:
 
         for (int csize = 1, batchPos = 0; batchPos < mBatchSize; batchPos += csize, mFileBatchPos += csize)
         {
-            assert(mFileBatchPos > 0 && mFileBatchPos <= mDims.d[0]);
+            ASSERT(mFileBatchPos > 0 && mFileBatchPos <= mDims.d[0]);
             if (mFileBatchPos == mDims.d[0] && !update())
             {
                 return false;
@@ -296,22 +292,16 @@ private:
         if (mListFile.empty())
         {
             std::string inputFileName = locateFile(mPrefix + std::to_string(mFileCount++) + mSuffix, mDataDir);
-            FILE* file = fopen(inputFileName.c_str(), "rb");
+            std::ifstream file(inputFileName.c_str(), std::ios::binary);
             if (!file)
             {
                 return false;
             }
-
             int d[4];
-            size_t readSize = fread(d, sizeof(int), 4, file);
-            assert(readSize == 4);
-            assert(mDims.d[0] == d[0] && mDims.d[1] == d[1] && mDims.d[2] == d[2] && mDims.d[3] == d[3]);
-            size_t readInputCount = fread(getFileBatch(), sizeof(float), mDims.d[0] * mImageSize, file);
-            assert(readInputCount == size_t(mDims.d[0] * mImageSize));
-            size_t readLabelCount = fread(getFileLabels(), sizeof(float), mDims.d[0], file);
-            assert(readLabelCount == 0 || readLabelCount == size_t(mDims.d[0]));
-
-            fclose(file);
+            file.read(reinterpret_cast<char*>(d), 4 * sizeof(int32_t));
+            ASSERT(mDims.d[0] == d[0] && mDims.d[1] == d[1] && mDims.d[2] == d[2] && mDims.d[3] == d[3]);
+            file.read(reinterpret_cast<char*>(getFileBatch()), sizeof(float) * mDims.d[0] * mImageSize);
+            file.read(reinterpret_cast<char*>(getFileLabels()), sizeof(float) * mDims.d[0]);
         }
         else
         {

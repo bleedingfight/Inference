@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 2020, NVIDIA CORPORATION. All rights reserved.
+ * SPDX-FileCopyrightText: Copyright (c) 1993-2023 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -35,15 +36,13 @@
  *
  */
 
-using namespace std;
-
 class ParserOnnxConfig : public nvonnxparser::IOnnxConfig
 {
 
 protected:
-    string mModelFilename{};
-    string mTextFilename{};
-    string mFullTextFilename{};
+    std::string mModelFilename{};
+    std::string mTextFilename{};
+    std::string mFullTextFilename{};
     nvinfer1::DataType mModelDtype;
     nvonnxparser::IOnnxConfig::Verbosity mVerbosity;
     bool mPrintLayercInfo;
@@ -63,7 +62,7 @@ public:
     }
 
 protected:
-    ~ParserOnnxConfig()
+    ~ParserOnnxConfig() override
     {
 #ifdef ONNX_DEBUG
         if (isDebug())
@@ -74,67 +73,67 @@ protected:
     }
 
 public:
-    virtual void setModelDtype(const nvinfer1::DataType modelDtype)
+    void setModelDtype(const nvinfer1::DataType modelDtype) noexcept override
     {
         mModelDtype = modelDtype;
     }
 
-    virtual nvinfer1::DataType getModelDtype() const
+    nvinfer1::DataType getModelDtype() const noexcept override
     {
         return mModelDtype;
     }
 
-    virtual const char* getModelFileName() const
+    const char* getModelFileName() const noexcept override
     {
         return mModelFilename.c_str();
     }
-    virtual void setModelFileName(const char* onnxFilename)
+    void setModelFileName(const char* onnxFilename) noexcept override
     {
-        mModelFilename = string(onnxFilename);
+        mModelFilename = std::string(onnxFilename);
     }
-    virtual nvonnxparser::IOnnxConfig::Verbosity getVerbosityLevel() const
+    nvonnxparser::IOnnxConfig::Verbosity getVerbosityLevel() const noexcept override
     {
         return mVerbosity;
     }
-    virtual void addVerbosity()
+    void addVerbosity() noexcept override
     {
         ++mVerbosity;
     }
-    virtual void reduceVerbosity()
+    void reduceVerbosity() noexcept override
     {
         --mVerbosity;
     }
-    virtual void setVerbosityLevel(nvonnxparser::IOnnxConfig::Verbosity verbosity)
+    void setVerbosityLevel(nvonnxparser::IOnnxConfig::Verbosity verbosity) noexcept override
     {
         mVerbosity = verbosity;
     }
 
-    virtual const char* getTextFileName() const
+    const char* getTextFileName() const noexcept override
     {
         return mTextFilename.c_str();
     }
-    virtual void setTextFileName(const char* textFilename)
+    void setTextFileName(const char* textFilename) noexcept override
     {
-        mTextFilename = string(textFilename);
+        mTextFilename = std::string(textFilename);
     }
-    virtual const char* getFullTextFileName() const
+    const char* getFullTextFileName() const noexcept override
     {
         return mFullTextFilename.c_str();
     }
-    virtual void setFullTextFileName(const char* fullTextFilename)
+    void setFullTextFileName(const char* fullTextFilename) noexcept override
     {
-        mFullTextFilename = string(fullTextFilename);
+        mFullTextFilename = std::string(fullTextFilename);
     }
-    virtual bool getPrintLayerInfo() const
+    bool getPrintLayerInfo() const noexcept override
     {
         return mPrintLayercInfo;
     }
-    virtual void setPrintLayerInfo(bool src)
+    void setPrintLayerInfo(bool src) noexcept override
     {
         mPrintLayercInfo = src;
     } //!< get the boolean variable corresponding to the Layer Info, see getPrintLayerInfo()
 
-    virtual bool isDebug() const
+    virtual bool isDebug() const noexcept
     {
 #if ONNX_DEBUG
         return (std::getenv("ONNX_DEBUG") ? true : false);
@@ -143,7 +142,7 @@ public:
 #endif
     }
 
-    virtual void destroy()
+    void destroy() noexcept override
     {
         delete this;
     }
