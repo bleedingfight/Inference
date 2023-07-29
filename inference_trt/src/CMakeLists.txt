@@ -1,5 +1,0 @@
-include_directories(${CMAKE_SOURCE_DIR}/include)
-file(GLOB SRCS "*.cpp")
-add_library(utils SHARED ${SRCS})
-message("====> ${CUDA_LIBRARIES}")
-target_link_libraries(utils PRIVATE ${CUDA_LIBRARIES})
