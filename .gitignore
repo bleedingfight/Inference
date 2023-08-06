@@ -1,4 +1,7 @@
 __pycache__/
+*.onnx
+*.plan
+*.engine
 *.plan
 *.cache
 build
